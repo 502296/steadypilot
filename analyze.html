@@ -1,283 +1,565 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>SteadyPilot — Health Score</title>
-<style>
-:root{
---bg: #0b1220;
---text:#eaf0ff;
---muted:#b7c3e1;
---stroke:#223252;
---shadow: 0 18px 50px rgba(0,0,0,.45);
---radius: 18px;
---good:#34d399;
---warn:#fbbf24;
---bad:#fb7185;
-}
-*{box-sizing:border-box}
-body{
-margin:0;
-font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-background: radial-gradient(1200px 600px at 20% 10%, rgba(125,211,252,.18), transparent 60%),
-radial-gradient(900px 500px at 80% 20%, rgba(167,139,250,.16), transparent 65%),
-linear-gradient(180deg, var(--bg), #070b14 60%, #060812);
-color: var(--text);
-}
-.container{ max-width: 980px; margin:0 auto; padding: 24px 16px 80px; }
-.top{
-display:flex; align-items:center; justify-content:space-between; gap:12px;
-padding: 6px 4px 18px;
-}
-.brand{ font-weight:900; letter-spacing:.2px; display:flex; gap:10px; align-items:center; }
-.logo{
-width:34px; height:34px; border-radius:12px;
-background: linear-gradient(135deg, rgba(125,211,252,.95), rgba(167,139,250,.95));
-position:relative;
-}
-.logo:after{
-content:""; position:absolute; inset:9px; border-radius:10px;
-background: rgba(7,11,20,.55); border:1px solid rgba(255,255,255,.14);
-}
-a{ color:inherit; text-decoration:none }
-.btn{
-display:inline-flex; align-items:center; justify-content:center;
-padding: 10px 12px; border-radius: 12px;
-border: 1px solid rgba(255,255,255,.12);
-background: rgba(255,255,255,.06);
-font-weight:800; font-size:14px;
-}
-.btn:hover{ background: rgba(255,255,255,.09); }
-.grid{
-display:grid;
-grid-template-columns: 1fr 1fr;
-gap: 14px;
-margin-top: 12px;
-}
-@media (max-width: 900px){ .grid{ grid-template-columns:1fr; } }
-.card{
-border: 1px solid rgba(255,255,255,.10);
-background: rgba(255,255,255,.035);
-border-radius: var(--radius);
-box-shadow: var(--shadow);
-padding: 18px 16px;
-}
-h1{ margin: 6px 0 6px; font-size: 26px; letter-spacing:-.3px;}
-p{ margin:0; color:var(--muted); }
-label{ display:block; margin:12px 0 6px; color:var(--muted); font-weight:700; font-size:13px;}
-input{
-width:100%;
-padding: 12px 12px;
-border-radius: 12px;
-border: 1px solid rgba(255,255,255,.12);
-background: rgba(255,255,255,.05);
-color: var(--text);
-outline:none;
-font-weight:700;
-}
-.row2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-@media (max-width: 520px){ .row2{ grid-template-columns:1fr; } }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SteadyPilot — Health Score</title>
 
-.primary{
-width:100%;
-margin-top: 14px;
-padding: 12px 14px;
-border-radius: 12px;
-border: 0;
-cursor:pointer;
-font-weight:900;
-color:#07101f;
-background: linear-gradient(135deg, rgba(125,211,252,.95), rgba(167,139,250,.95));
-}
-.primary:active{ transform: translateY(1px); }
+  <style>
+    :root{
+      --bg:#0b1220;
+      --bg2:#0f1a30;
 
-.scoreWrap{
-display:flex; align-items:center; gap:16px; flex-wrap:wrap;
-}
-.ring{
-width: 120px; height: 120px; border-radius: 50%;
-display:grid; place-items:center;
-background:
-conic-gradient(var(--ring) calc(var(--p)*1%), rgba(255,255,255,.10) 0);
-border: 1px solid rgba(255,255,255,.10);
-}
-.ringInner{
-width: 92px; height: 92px; border-radius: 50%;
-background: rgba(7,11,20,.55);
-border: 1px solid rgba(255,255,255,.12);
-display:grid; place-items:center;
-text-align:center;
-}
-.scoreNum{ font-size:28px; font-weight:950; line-height:1; }
-.scoreSmall{ font-size:12px; color:var(--muted); font-weight:800; }
-.badge{
-display:inline-flex; align-items:center;
-padding: 6px 10px; border-radius:999px;
-border: 1px solid rgba(255,255,255,.12);
-background: rgba(255,255,255,.05);
-font-weight:900; font-size:12px;
-}
-.good{ color:var(--good); }
-.warn{ color:var(--warn); }
-.bad{ color:var(--bad); }
+      --card: rgba(15, 27, 51, 0.70);
+      --card2: rgba(15, 27, 51, 0.45);
 
-.hint{ margin-top:10px; font-size:12px; color: rgba(183,195,225,.85); }
-.oneLine{
-margin-top: 10px;
-font-weight:900;
-font-size: 15px;
-}
-.breakdown{
-margin-top: 12px;
-display:grid;
-gap:10px;
-color:var(--muted);
-font-weight:700;
-font-size: 13px;
-}
-.bItem{
-display:flex; justify-content:space-between; gap:10px;
-padding-top:10px;
-border-top: 1px dashed rgba(255,255,255,.12);
-}
-</style>
+      --stroke: rgba(34, 50, 82, 0.75);
+      --stroke2: rgba(43, 61, 99, 0.95);
+
+      --text:#eaf0ff;
+      --muted:#b7c3e1;
+      --muted2:#93a2c8;
+
+      --accent:#7dd3fc;
+      --accent2:#a78bfa;
+
+      --good:#34d399;
+      --warn:#fbbf24;
+      --bad:#fb7185;
+
+      --shadow: 0 18px 55px rgba(0,0,0,.45);
+      --shadow2: 0 10px 30px rgba(0,0,0,.35);
+
+      --radius: 18px;
+      --radius2: 14px;
+
+      --max: 1120px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color: var(--text);
+      line-height:1.55;
+
+      background:
+        radial-gradient(1200px 800px at 20% 0%, rgba(125,211,252,0.10), transparent 55%),
+        radial-gradient(900px 700px at 80% 10%, rgba(167,139,250,0.10), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:0.07;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+      mix-blend-mode:overlay;
+    }
+
+    a{ color:inherit; text-decoration:none; }
+    p{ color: var(--muted); margin:0; }
+
+    .container{
+      width: min(100% - 40px, var(--max));
+      margin: 0 auto;
+      padding: 0 0 70px;
+    }
+
+    /* Sticky nav */
+    .navWrap{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(10px);
+      background: rgba(11, 18, 32, 0.55);
+      border-bottom: 1px solid rgba(34, 50, 82, 0.55);
+    }
+    .nav{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding: 14px 0;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      font-weight: 850;
+      letter-spacing:.2px;
+    }
+
+    .mark{
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(125,211,252,0.95), rgba(167,139,250,0.85));
+      box-shadow: 0 0 0 6px rgba(125,211,252,0.07);
+      flex: 0 0 12px;
+    }
+
+    .brandText{
+      display:flex;
+      align-items:baseline;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .brandName{ font-size: 15px; }
+    .brandSub{
+      font-size: 12px;
+      color: var(--muted2);
+      padding-left: 10px;
+      border-left: 1px solid rgba(34, 50, 82, 0.9);
+    }
+
+    .navRight{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(34, 50, 82, 0.85);
+      background: rgba(15, 27, 51, 0.55);
+      font-weight: 850;
+      font-size: 14px;
+      transition: transform .16s ease, box-shadow .16s ease, background .16s ease, border-color .16s ease;
+      user-select:none;
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.35);
+      border-color: rgba(43, 61, 99, 0.95);
+      background: rgba(15, 27, 51, 0.72);
+    }
+    .btn:active{ transform: translateY(0px); }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(34, 50, 82, 0.85);
+      background: rgba(15, 27, 51, 0.45);
+      color: var(--muted);
+      font-weight: 750;
+      font-size: 12px;
+      white-space:nowrap;
+    }
+
+    /* Page header */
+    .pageHead{
+      padding: 22px 0 6px;
+    }
+    .titleRow{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    h1{
+      margin: 0;
+      font-size: 26px;
+      letter-spacing:-.35px;
+    }
+    .subtitle{
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 70ch;
+    }
+
+    /* Grid + cards */
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+      align-items:start;
+    }
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      border: 1px solid var(--stroke);
+      background: rgba(15, 27, 51, 0.32);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      padding: 18px 16px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    /* subtle card sheen */
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(520px 220px at 20% 0%, rgba(125,211,252,0.12), transparent 60%),
+        radial-gradient(520px 240px at 80% 10%, rgba(167,139,250,0.10), transparent 62%);
+      pointer-events:none;
+      opacity: .55;
+    }
+    .card > *{ position:relative; }
+
+    .card h2{
+      margin: 6px 0 6px;
+      font-size: 18px;
+      letter-spacing:-.2px;
+    }
+
+    label{
+      display:block;
+      margin:12px 0 6px;
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .row2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 520px){
+      .row2{ grid-template-columns: 1fr; }
+    }
+
+    input{
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(34, 50, 82, 0.75);
+      background: rgba(11,18,32,0.35);
+      color: var(--text);
+      outline:none;
+      font-weight: 700;
+      font-size: 14px;
+      transition: border-color .16s ease, box-shadow .16s ease;
+    }
+    input::placeholder{ color: rgba(183,195,225,.65); }
+    input:focus{
+      border-color: rgba(125,211,252,0.35);
+      box-shadow: 0 0 0 6px rgba(125,211,252,0.10);
+    }
+
+    .primary{
+      width:100%;
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(125,211,252,0.40);
+      cursor:pointer;
+      font-weight: 950;
+      font-size: 14px;
+      color: var(--text);
+      background: linear-gradient(135deg, rgba(125,211,252,0.22), rgba(167,139,250,0.18));
+      transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+    }
+    .primary:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 16px 40px rgba(125,211,252,0.12), 0 16px 40px rgba(167,139,250,0.10);
+      border-color: rgba(43, 61, 99, 0.95);
+    }
+    .primary:active{ transform: translateY(0px); }
+
+    .hint{
+      margin-top:10px;
+      font-size:12px;
+      color: rgba(183,195,225,.85);
+    }
+
+    /* Result area */
+    .scoreWrap{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      flex-wrap:wrap;
+      margin-top: 8px;
+    }
+
+    .ring{
+      width: 122px;
+      height: 122px;
+      border-radius: 50%;
+      display:grid;
+      place-items:center;
+      background:
+        conic-gradient(var(--ring) calc(var(--p)*1%), rgba(34, 50, 82, 0.55) 0);
+      border: 1px solid rgba(34, 50, 82, 0.75);
+    }
+
+    .ringInner{
+      width: 92px;
+      height: 92px;
+      border-radius: 50%;
+      background: rgba(11,18,32,0.40);
+      border: 1px solid rgba(34, 50, 82, 0.75);
+      display:grid;
+      place-items:center;
+      text-align:center;
+    }
+
+    .scoreNum{ font-size:28px; font-weight: 980; line-height:1; }
+    .scoreSmall{ font-size:12px; color:var(--muted); font-weight: 850; }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(34, 50, 82, 0.70);
+      background: rgba(15, 27, 51, 0.35);
+      font-weight: 950;
+      font-size: 12px;
+      white-space:nowrap;
+    }
+    .good{ color: rgba(167,255,214,0.95); border-color: rgba(52,211,153,0.35); }
+    .warn{ color: rgba(255,229,170,0.95); border-color: rgba(251,191,36,0.35); }
+    .bad{  color: rgba(255,183,195,0.95); border-color: rgba(251,113,133,0.35); }
+
+    .oneLine{
+      margin-top: 10px;
+      font-weight: 950;
+      font-size: 15px;
+    }
+
+    .breakdown{
+      margin-top: 12px;
+      display:grid;
+      gap:10px;
+      color: var(--muted);
+      font-weight: 750;
+      font-size: 13px;
+    }
+    .bItem{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      padding-top:10px;
+      border-top: 1px dashed rgba(34, 50, 82, 0.70);
+    }
+
+    /* Footer */
+    .footer{
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(34, 50, 82, 0.55);
+      display:flex;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      gap:12px;
+      color: rgba(183,195,225,.88);
+      font-size: 13px;
+    }
+    .tiny{ color: rgba(183,195,225,.72); }
+    .footer a{
+      color: var(--text);
+      opacity: 0.92;
+      border-bottom: 1px dashed rgba(183,195,225,0.35);
+    }
+    .footer a:hover{ opacity: 1; border-bottom-color: rgba(234,240,255,0.55); }
+
+    /* entrance */
+    .fadeIn{
+      animation: fadeUp .55s ease both;
+    }
+    @keyframes fadeUp{
+      from{ opacity:0; transform: translateY(8px); }
+      to{ opacity:1; transform: translateY(0); }
+    }
+  </style>
 </head>
+
 <body>
-<div class="container">
-<div class="top">
-<div class="brand"><span class="logo"></span> SteadyPilot</div>
-<div style="display:flex; gap:10px; flex-wrap:wrap;">
-<a class="btn" href="index.html">← Back to Home</a>
-</div>
-</div>
+  <div class="navWrap">
+    <div class="container">
+      <header class="nav">
+        <div class="brand">
+          <span class="mark" aria-hidden="true"></span>
+          <div class="brandText">
+            <span class="brandName">SteadyPilot</span>
+            <span class="brandSub">Health Score</span>
+          </div>
+          <span class="pill">Conservative v1 • Calm Guidance</span>
+        </div>
 
-<div class="grid">
-<div class="card">
-<h1>Restaurant Health Score</h1>
-<p>Enter simple monthly numbers. We’ll calculate a calm, conservative score.</p>
+        <div class="navRight">
+          <a class="btn" href="index.html">← Back to Home</a>
+        </div>
+      </header>
+    </div>
+  </div>
 
-<div class="row2">
-<div>
-<label>Monthly Revenue ($)</label>
-<input id="revenue" type="number" placeholder="e.g. 45000" />
-</div>
-<div>
-<label>Monthly Rent ($)</label>
-<input id="rent" type="number" placeholder="e.g. 9000" />
-</div>
-</div>
+  <div class="container fadeIn">
+    <section class="pageHead">
+      <div class="titleRow">
+        <div>
+          <h1>Restaurant Health Score</h1>
+          <div class="subtitle">
+            Enter simple monthly numbers. We’ll calculate a calm, conservative score and give you one priority.
+          </div>
+        </div>
+      </div>
+    </section>
 
-<div class="row2">
-<div>
-<label>Monthly Labor Cost ($)</label>
-<input id="labor" type="number" placeholder="e.g. 16000" />
-</div>
-<div>
-<label>Food Cost %</label>
-<input id="food" type="number" placeholder="e.g. 31" />
-</div>
-</div>
+    <div class="grid">
+      <div class="card">
+        <h2>Inputs</h2>
+        <p>Keep it simple. This is designed to be trustworthy and fast (v1).</p>
 
-<button class="primary" onclick="calculate()">Analyze</button>
-<div class="hint">Tip: This is v1. We keep it simple & trustworthy (no overwhelm).</div>
-</div>
+        <div class="row2">
+          <div>
+            <label>Monthly Revenue ($)</label>
+            <input id="revenue" type="number" placeholder="e.g. 45000" />
+          </div>
+          <div>
+            <label>Monthly Rent ($)</label>
+            <input id="rent" type="number" placeholder="e.g. 9000" />
+          </div>
+        </div>
 
-<div class="card">
-<h1>Your Result</h1>
-<div id="result" class="hint">Enter numbers and click Analyze.</div>
-</div>
-</div>
-</div>
+        <div class="row2">
+          <div>
+            <label>Monthly Labor Cost ($)</label>
+            <input id="labor" type="number" placeholder="e.g. 16000" />
+          </div>
+          <div>
+            <label>Food Cost %</label>
+            <input id="food" type="number" placeholder="e.g. 31" />
+          </div>
+        </div>
 
-<script>
-function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+        <button class="primary" onclick="calculate()">Analyze</button>
+        <div class="hint">Tip: v1 uses conservative bands. It’s meant to be steady, not flashy.</div>
+      </div>
 
-function pointsFromBands(value, bands){
-// bands: [{max, pts}] ascending; last is default
-for (const b of bands){
-if (value <= b.max) return b.pts;
-}
-return bands[bands.length - 1].pts;
-}
+      <div class="card">
+        <h2>Your Result</h2>
+        <div id="result" class="hint">Enter numbers and click Analyze.</div>
+      </div>
+    </div>
 
-function calculate(){
-const revenue = parseFloat(document.getElementById("revenue").value);
-const rent = parseFloat(document.getElementById("rent").value);
-const labor = parseFloat(document.getElementById("labor").value);
-const foodPct = parseFloat(document.getElementById("food").value);
+    <footer class="footer">
+      <div>
+        <b>SteadyPilot</b> <span class="tiny">— Calm decision intelligence for independents.</span><br/>
+        <span class="tiny">Contact: </span>
+        <a href="mailto:contact@steadypilot.ai">contact@steadypilot.ai</a>
+      </div>
+      <div class="tiny">
+        © <span id="year"></span> SteadyPilot • Beta
+      </div>
+    </footer>
+  </div>
 
-if (!revenue || !rent || !labor || !foodPct){
-alert("Please fill all fields.");
-return;
-}
+  <script>
+    // Year
+    document.getElementById("year").textContent = new Date().getFullYear();
 
-const rentRatio = (rent / revenue) * 100;
-const laborRatio = (labor / revenue) * 100;
+    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
 
-// Conservative net margin estimate (simple v1):
-const netMargin = 100 - (rentRatio + laborRatio + foodPct);
+    function pointsFromBands(value, bands){
+      // bands: [{max, pts}] ascending; last is default
+      for (const b of bands){
+        if (value <= b.max) return b.pts;
+      }
+      return bands[bands.length - 1].pts;
+    }
 
-// Each category: 0..25 points (conservative bands)
-const rentPts = pointsFromBands(rentRatio, [
-{ max: 10, pts: 25 },
-{ max: 18, pts: 18 },
-{ max: 1000, pts: 10 }
-]);
+    function calculate(){
+      const revenue = parseFloat(document.getElementById("revenue").value);
+      const rent = parseFloat(document.getElementById("rent").value);
+      const labor = parseFloat(document.getElementById("labor").value);
+      const foodPct = parseFloat(document.getElementById("food").value);
 
-const laborPts = (laborRatio >= 25 && laborRatio <= 30) ? 25
-: (laborRatio <= 35 ? 18 : 10);
+      if (!revenue || !rent || !labor || !foodPct){
+        alert("Please fill all fields.");
+        return;
+      }
 
-const foodPts = (foodPct >= 26 && foodPct <= 30) ? 25
-: (foodPct <= 34 ? 18 : 10);
+      const rentRatio = (rent / revenue) * 100;
+      const laborRatio = (labor / revenue) * 100;
 
-const marginPts = (netMargin >= 12) ? 25
-: (netMargin >= 7 ? 18 : 10);
+      // Conservative net margin estimate (simple v1):
+      const netMargin = 100 - (rentRatio + laborRatio + foodPct);
 
-const score = clamp(Math.round(rentPts + laborPts + foodPts + marginPts), 0, 100);
+      // Each category: 0..25 points (conservative bands)
+      const rentPts = pointsFromBands(rentRatio, [
+        { max: 10, pts: 25 },
+        { max: 18, pts: 18 },
+        { max: 1000, pts: 10 }
+      ]);
 
-let status = "Stable";
-let cls = "good";
-let ring = "var(--good)";
-let onePriority = "Keep your core costs stable and protect margin with small weekly adjustments.";
+      const laborPts = (laborRatio >= 25 && laborRatio <= 30) ? 25
+        : (laborRatio <= 35 ? 18 : 10);
 
-if (score < 50){
-status = "High Risk";
-cls = "bad";
-ring = "var(--bad)";
-onePriority = "Focus on cash stability: reduce cost pressure (labor/food) before adding new expenses.";
-} else if (score < 75){
-status = "Moderate Risk";
-cls = "warn";
-ring = "var(--warn)";
-onePriority = "Protect margin this month: tune portion sizes or pricing on your highest-volume items.";
-}
+      const foodPts = (foodPct >= 26 && foodPct <= 30) ? 25
+        : (foodPct <= 34 ? 18 : 10);
 
-const result = document.getElementById("result");
-result.innerHTML = `
-<div class="scoreWrap">
-<div class="ring" style="--p:${score}; --ring:${ring};">
-<div class="ringInner">
-<div class="scoreNum">${score}</div>
-<div class="scoreSmall">/ 100</div>
-</div>
-</div>
-<div>
-<div class="badge ${cls}">${status}</div>
-<div class="oneLine">One clear priority:</div>
-<div style="color:var(--muted); font-weight:800; margin-top:6px;">${onePriority}</div>
-<div class="hint" style="margin-top:10px;">Based on simple industry benchmark bands for independent restaurants (v1).</div>
-</div>
-</div>
+      const marginPts = (netMargin >= 12) ? 25
+        : (netMargin >= 7 ? 18 : 10);
 
-<div class="breakdown">
-<div class="bItem"><span>Rent ratio</span><span>${rentRatio.toFixed(1)}% (${rentPts}/25)</span></div>
-<div class="bItem"><span>Labor ratio</span><span>${laborRatio.toFixed(1)}% (${laborPts}/25)</span></div>
-<div class="bItem"><span>Food cost</span><span>${foodPct.toFixed(1)}% (${foodPts}/25)</span></div>
-<div class="bItem"><span>Net margin (estimate)</span><span>${netMargin.toFixed(1)}% (${marginPts}/25)</span></div>
-</div>
-`;
-}
-</script>
+      const score = clamp(Math.round(rentPts + laborPts + foodPts + marginPts), 0, 100);
+
+      let status = "Stable";
+      let cls = "good";
+      let ring = "var(--good)";
+      let onePriority = "Keep your core costs stable and protect margin with small weekly adjustments.";
+
+      if (score < 50){
+        status = "High Risk";
+        cls = "bad";
+        ring = "var(--bad)";
+        onePriority = "Focus on cash stability: reduce cost pressure (labor/food) before adding new expenses.";
+      } else if (score < 75){
+        status = "Moderate Risk";
+        cls = "warn";
+        ring = "var(--warn)";
+        onePriority = "Protect margin this month: tune portion sizes or pricing on your highest-volume items.";
+      }
+
+      const result = document.getElementById("result");
+      result.innerHTML = `
+        <div class="scoreWrap">
+          <div class="ring" style="--p:${score}; --ring:${ring};">
+            <div class="ringInner">
+              <div class="scoreNum">${score}</div>
+              <div class="scoreSmall">/ 100</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="badge ${cls}">${status}</div>
+            <div class="oneLine">One clear priority:</div>
+            <div style="color:var(--muted); font-weight:850; margin-top:6px;">${onePriority}</div>
+            <div class="hint" style="margin-top:10px;">Based on simple industry benchmark bands for independent restaurants (v1).</div>
+          </div>
+        </div>
+
+        <div class="breakdown">
+          <div class="bItem"><span>Rent ratio</span><span>${rentRatio.toFixed(1)}% (${rentPts}/25)</span></div>
+          <div class="bItem"><span>Labor ratio</span><span>${laborRatio.toFixed(1)}% (${laborPts}/25)</span></div>
+          <div class="bItem"><span>Food cost</span><span>${foodPct.toFixed(1)}% (${foodPts}/25)</span></div>
+          <div class="bItem"><span>Net margin (estimate)</span><span>${netMargin.toFixed(1)}% (${marginPts}/25)</span></div>
+        </div>
+      `;
+    }
+  </script>
 </body>
 </html>
