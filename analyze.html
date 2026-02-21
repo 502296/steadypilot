@@ -1,516 +1,581 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>SteadyPilot — Health Score</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SteadyPilot — Health Score</title>
 
-<style>
-:root{
-  --bg:#0b1220;
-  --bg2:#0f1a30;
-  --text:#eaf0ff;
-  --muted:#b7c3e1;
-  --stroke: rgba(255,255,255,.12);
+  <style>
+    :root{
+      --bg:#0b1220;
+      --bg2:#0f1a30;
+      --card: rgba(255,255,255,.035);
+      --card2: rgba(15,26,48,.55);
+      --stroke: rgba(255,255,255,.10);
+      --stroke2: rgba(255,255,255,.14);
+      --text:#eaf0ff;
+      --muted:#b7c3e1;
+      --accent:#7dd3fc;
+      --accent2:#a78bfa;
+      --good:#34d399;
+      --warn:#fbbf24;
+      --bad:#fb7185;
+      --shadow: 0 18px 50px rgba(0,0,0,.45);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background:
+        radial-gradient(1200px 600px at 20% 10%, rgba(125,211,252,.18), transparent 60%),
+        radial-gradient(900px 500px at 80% 20%, rgba(167,139,250,.16), transparent 65%),
+        linear-gradient(180deg, var(--bg), #070b14 60%, #060812);
+      color: var(--text);
+    }
+    a{color:inherit; text-decoration:none}
 
-  --accent:#7dd3fc;
-  --accent2:#a78bfa;
+    .wrap{ max-width: 1180px; margin:0 auto; padding: 18px 16px 70px; }
 
-  --shadow: 0 18px 55px rgba(0,0,0,.45);
-  --radius: 18px;
-  --radius2: 14px;
+    /* Top bar (dashboard style) */
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding: 10px 6px 14px;
+      position: sticky; top: 0;
+      background: linear-gradient(180deg, rgba(11,18,32,.92), rgba(11,18,32,.55));
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      z-index: 50;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight: 950;
+      letter-spacing: .2px;
+      white-space: nowrap;
+    }
+    .logo{
+      width:36px; height:36px; border-radius: 12px;
+      background: linear-gradient(135deg, rgba(125,211,252,.95), rgba(167,139,250,.95));
+      position:relative;
+      box-shadow: 0 12px 28px rgba(125,211,252,.10);
+      flex: 0 0 36px;
+    }
+    .logo:after{
+      content:""; position:absolute; inset:9px; border-radius:10px;
+      background: rgba(7,11,20,.55);
+      border: 1px solid rgba(255,255,255,.14);
+    }
+    .subBrand{
+      display:flex; flex-direction:column; line-height:1.05;
+    }
+    .subBrand small{
+      color: rgba(183,195,225,.85);
+      font-weight: 800;
+      font-size: 12px;
+    }
+    .nav{
+      display:flex; align-items:center; gap: 10px; flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      font-weight: 850;
+      font-size: 13px;
+      white-space:nowrap;
+    }
+    .link{
+      color: rgba(183,195,225,.92);
+      font-weight: 850;
+      font-size: 13px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+    }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      font-weight: 900;
+      font-size: 13px;
+      cursor:pointer;
+      transition: transform .08s ease, background .15s ease, border-color .15s ease;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .btn:hover{ background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.18); }
+    .btn:active{ transform: translateY(1px); }
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(125,211,252,.95), rgba(167,139,250,.95));
+      color: #07101f;
+      border-color: transparent;
+    }
 
-  --good:#34d399;
-  --warn:#fbbf24;
-  --bad:#fb7185;
-}
+    /* Header (like screenshot) */
+    .header{
+      margin-top: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(15,26,48,.55), rgba(7,11,20,.35));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px 20px;
+      overflow:hidden;
+      position:relative;
+    }
+    .header:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(720px 240px at 20% 0%, rgba(125,211,252,.22), transparent 62%),
+        radial-gradient(680px 260px at 80% 10%, rgba(167,139,250,.20), transparent 64%);
+      pointer-events:none;
+    }
+    .headerInner{ position:relative; }
+    h1{
+      margin: 6px 0 8px;
+      font-size: clamp(28px, 3.6vw, 44px);
+      line-height: 1.08;
+      letter-spacing: -.6px;
+    }
+    .lead{
+      margin:0;
+      color: var(--muted);
+      font-size: 16px;
+      max-width: 70ch;
+      font-weight: 700;
+    }
 
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-  color: var(--text);
-  background:
-    radial-gradient(1200px 600px at 18% 10%, rgba(125,211,252,.18), transparent 60%),
-    radial-gradient(900px 500px at 82% 18%, rgba(167,139,250,.16), transparent 65%),
-    linear-gradient(180deg, var(--bg), #070b14 60%, #060812);
-}
+    /* Dashboard grid */
+    .grid{
+      margin-top: 16px;
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 14px;
+      align-items:start;
+    }
+    @media (max-width: 980px){ .grid{ grid-template-columns: 1fr; } }
 
-a{ color:inherit; text-decoration:none }
+    .card{
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.035);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 16px;
+    }
+    .card h2{
+      margin:0 0 8px;
+      font-size: 16px;
+      letter-spacing:-.2px;
+    }
+    .muted{ color: var(--muted); font-weight: 700; font-size: 13px; }
 
-.wrap{
-  max-width: 1180px;
-  margin:0 auto;
-  padding: 18px 16px 80px;
-}
+    /* Inputs (right column top in screenshot usually) */
+    label{ display:block; margin:12px 0 6px; color:var(--muted); font-weight:800; font-size:12px;}
+    input{
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: var(--text);
+      outline:none;
+      font-weight: 800;
+      font-size: 14px;
+    }
+    input::placeholder{ color: rgba(183,195,225,.65); }
+    .row2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    @media (max-width: 520px){ .row2{ grid-template-columns:1fr; } }
 
-/* Top Bar */
-.topbar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding: 10px 6px 18px;
-  position: sticky;
-  top:0;
-  backdrop-filter: blur(10px);
-  z-index:10;
-}
-.topbar::before{
-  content:"";
-  position:absolute; inset:0;
-  background: rgba(6,8,18,.35);
-  border-bottom: 1px solid rgba(255,255,255,.08);
-  z-index:-1;
-}
+    .analyzeBtn{
+      width:100%;
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 0;
+      cursor:pointer;
+      font-weight: 950;
+      color:#07101f;
+      background: linear-gradient(135deg, rgba(125,211,252,.95), rgba(167,139,250,.95));
+    }
+    .analyzeBtn:active{ transform: translateY(1px); }
 
-.brand{
-  display:flex; align-items:center; gap:10px;
-  min-width: 230px;
-}
-.mark{
-  width:34px; height:34px; border-radius:12px;
-  background: linear-gradient(135deg, rgba(125,211,252,.95), rgba(167,139,250,.95));
-  box-shadow: 0 14px 30px rgba(125,211,252,.14);
-  position:relative;
-  flex:0 0 34px;
-}
-.mark::after{
-  content:"";
-  position:absolute; inset:9px;
-  border-radius: 10px;
-  background: rgba(7,11,20,.55);
-  border: 1px solid rgba(255,255,255,.14);
-}
-.brandName{display:flex; flex-direction:column; line-height:1.1}
-.brandName b{font-size:14px; letter-spacing:.2px}
-.brandName span{font-size:12px; color:rgba(183,195,225,.85); font-weight:700}
+    /* KPI cards inside left column */
+    .kpiGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    @media (max-width: 720px){ .kpiGrid{ grid-template-columns: 1fr; } }
+    .kpi{
+      border: 1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(15,26,48,.48), rgba(7,11,20,.30));
+      border-radius: 16px;
+      padding: 14px 14px;
+    }
+    .kpiTop{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      margin-bottom: 10px;
+    }
+    .badge{
+      display:inline-flex; align-items:center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      font-weight: 950;
+      font-size: 12px;
+      white-space:nowrap;
+    }
+    .good{ color: var(--good); }
+    .warn{ color: var(--warn); }
+    .bad{ color: var(--bad); }
 
-.tabs{
-  display:flex; align-items:center; gap:16px;
-  color: rgba(183,195,225,.88);
-  font-weight:900;
-  font-size: 13px;
-  justify-content:center;
-  flex-wrap:wrap;
-}
-.tab{
-  padding: 8px 10px;
-  border-radius: 999px;
-  border: 1px solid transparent;
-  opacity:.9;
-}
-.tab.active{
-  border-color: rgba(255,255,255,.14);
-  background: rgba(255,255,255,.04);
-  opacity:1;
-  color: var(--text);
-}
-.tab:hover{opacity:1;color:var(--text)}
+    .scoreRow{ display:flex; align-items:baseline; gap:10px; }
+    .scoreNum{ font-size: 46px; font-weight: 950; letter-spacing:-.8px; line-height:1; }
+    .scoreDen{ color: var(--muted); font-weight: 900; }
 
-.rightTools{
-  display:flex; align-items:center; gap:10px;
-  justify-content:flex-end;
-  min-width: 280px;
-  flex-wrap:wrap;
-}
-.pill{
-  display:inline-flex; align-items:center; gap:8px;
-  padding: 8px 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.04);
-  color: var(--muted);
-  font-weight:900;
-  font-size: 12px;
-  white-space:nowrap;
-}
-.emailPill{
-  color: rgba(234,240,255,.92);
-  background: rgba(255,255,255,.03);
-}
-.emailPill:hover{border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.05);}
-.btn{
-  display:inline-flex; align-items:center; justify-content:center;
-  gap:10px;
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.06);
-  color: var(--text);
-  font-weight:950;
-  font-size: 13px;
-  cursor:pointer;
-  user-select:none;
-  transition: transform .08s ease, background .15s ease, border-color .15s ease;
-}
-.btn:hover{background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.18);}
-.btn:active{transform: translateY(1px);}
-.btn.primary{
-  background: linear-gradient(135deg, rgba(125,211,252,.95), rgba(167,139,250,.95));
-  color: #07101f;
-  border-color: transparent;
-}
+    /* ring like screenshot */
+    .ring{
+      width: 150px; height: 150px; border-radius: 50%;
+      display:grid; place-items:center;
+      background: conic-gradient(var(--ring) calc(var(--p)*1%), rgba(255,255,255,.10) 0);
+      border: 1px solid rgba(255,255,255,.10);
+      margin-right: 14px;
+      flex: 0 0 150px;
+    }
+    .ringInner{
+      width: 112px; height: 112px; border-radius: 50%;
+      background: rgba(7,11,20,.55);
+      border: 1px solid rgba(255,255,255,.12);
+      display:grid; place-items:center;
+      text-align:center;
+    }
+    .ringNum{ font-size:34px; font-weight: 950; line-height:1; }
+    .ringSmall{ font-size:12px; color: var(--muted); font-weight: 900; }
+    .healthBlock{
+      display:flex; align-items:center; gap: 8px; flex-wrap:wrap;
+    }
+    .priorityTitle{
+      margin-top: 10px;
+      font-weight: 950;
+      font-size: 14px;
+    }
+    .priorityText{
+      margin-top: 6px;
+      color: var(--muted);
+      font-weight: 850;
+      font-size: 13px;
+      line-height: 1.35;
+    }
 
-/* Cards / Layout */
-.grid{
-  margin-top: 16px;
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-@media (max-width: 980px){ .grid{ grid-template-columns: 1fr; } }
+    .recoCard{
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      border-radius: 16px;
+      padding: 14px 14px;
+      display:flex; align-items:flex-start; gap: 12px;
+      position:relative;
+      overflow:hidden;
+    }
+    .recoCard:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(520px 180px at 30% 0%, rgba(125,211,252,.12), transparent 60%);
+      pointer-events:none;
+    }
+    .recoInner{ position:relative; }
+    .recoText{
+      margin: 2px 0 10px;
+      font-weight: 900;
+      color: var(--text);
+    }
+    .recoBtn{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(125,211,252,.12);
+      color: var(--text);
+      font-weight: 950;
+      font-size: 13px;
+    }
+    .recoBtn:hover{ filter: brightness(1.05); }
 
-.card{
-  border: 1px solid rgba(255,255,255,.10);
-  background: linear-gradient(180deg, rgba(15,26,48,.58), rgba(7,11,20,.38));
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 16px;
-  position:relative;
-  overflow:hidden;
-}
-.card::before{
-  content:"";
-  position:absolute; inset:-2px;
-  background:
-    radial-gradient(700px 260px at 20% 0%, rgba(125,211,252,.20), transparent 60%),
-    radial-gradient(650px 280px at 80% 10%, rgba(167,139,250,.18), transparent 62%);
-  pointer-events:none;
-  opacity:.55;
-}
-.card > *{ position:relative; }
+    .inputsList{
+      margin-top: 12px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 720px){ .inputsList{ grid-template-columns: 1fr; } }
+    .inputItem{
+      border-top: 1px dashed rgba(255,255,255,.12);
+      padding-top: 10px;
+      display:flex; justify-content:space-between; gap:10px;
+      color: var(--muted);
+      font-weight: 850;
+      font-size: 13px;
+    }
+    .inputItem b{ color: var(--text); }
 
-.hTitle{
-  margin: 0 0 8px;
-  font-size: 16px;
-  font-weight: 1000;
-  letter-spacing: -.2px;
-}
-.p{ margin:0; color: var(--muted); font-weight:700; font-size: 14px; }
-
-.formGrid{
-  margin-top: 12px;
-  display:grid;
-  gap: 10px;
-}
-.row2{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
-@media (max-width: 560px){ .row2{ grid-template-columns: 1fr; } }
-
-label{ display:block; margin: 6px 0 6px; color: var(--muted); font-weight:900; font-size: 12px; }
-input{
-  width:100%;
-  padding: 12px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.05);
-  color: var(--text);
-  outline:none;
-  font-weight:850;
-}
-input::placeholder{ color: rgba(183,195,225,.65); }
-
-.primaryBtn{
-  width:100%;
-  margin-top: 12px;
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: 0;
-  cursor:pointer;
-  font-weight:1000;
-  color:#07101f;
-  background: linear-gradient(135deg, rgba(125,211,252,.95), rgba(167,139,250,.95));
-}
-.primaryBtn:active{ transform: translateY(1px); }
-
-.badge{
-  display:inline-flex;
-  align-items:center;
-  padding: 6px 10px;
-  border-radius:999px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.05);
-  font-weight:1000;
-  font-size: 12px;
-}
-.good{ color: var(--good); }
-.warn{ color: var(--warn); }
-.bad{ color: var(--bad); }
-
-.resultGrid{
-  display:grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-  margin-top: 10px;
-}
-
-.panel{
-  border: 1px solid rgba(255,255,255,.10);
-  background: rgba(255,255,255,.04);
-  border-radius: var(--radius2);
-  padding: 14px;
-}
-
-.scoreTop{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  flex-wrap:wrap;
-}
-
-.scoreRow{
-  display:flex;
-  align-items:center;
-  gap: 14px;
-  flex-wrap:wrap;
-  margin-top: 10px;
-}
-
-/* Ring */
-.ring{
-  width: 132px; height: 132px; border-radius: 50%;
-  display:grid; place-items:center;
-  background: conic-gradient(var(--ring) calc(var(--p)*1%), rgba(255,255,255,.10) 0);
-  border: 1px solid rgba(255,255,255,.10);
-}
-.ringInner{
-  width: 102px; height: 102px; border-radius: 50%;
-  background: rgba(7,11,20,.55);
-  border: 1px solid rgba(255,255,255,.12);
-  display:grid; place-items:center;
-  text-align:center;
-}
-.scoreNum{ font-size:30px; font-weight:1000; line-height:1; }
-.scoreSmall{ font-size:12px; color:var(--muted); font-weight:900; }
-
-.bigLine{
-  margin-top: 8px;
-  font-weight: 1000;
-  font-size: 15px;
-}
-.smallLine{
-  margin-top: 6px;
-  color: var(--muted);
-  font-weight: 800;
-  font-size: 13px;
-  line-height:1.35;
-}
-
-.kv{
-  margin-top: 10px;
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-@media (max-width: 560px){ .kv{ grid-template-columns:1fr; } }
-
-.kvItem{
-  border-top: 1px dashed rgba(255,255,255,.12);
-  padding-top: 10px;
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  color: var(--muted);
-  font-weight: 850;
-  font-size: 13px;
-}
-.kvItem b{ color: rgba(234,240,255,.92); }
-
-.hint{
-  margin-top: 10px;
-  font-size: 12px;
-  color: rgba(183,195,225,.85);
-  font-weight: 800;
-}
-@media (max-width: 720px){
-  .tabs{display:none;}
-  .pill{display:none;}
-}
-</style>
+    .footer{
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,.10);
+      color: rgba(183,195,225,.85);
+      font-size: 13px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .tiny{ color: rgba(183,195,225,.70); }
+  </style>
 </head>
 
 <body>
   <div class="wrap">
-    <header class="topbar">
+
+    <div class="topbar">
       <div class="brand">
-        <div class="mark" aria-hidden="true"></div>
-        <div class="brandName">
-          <b>SteadyPilot</b>
-          <span>Health Score • Calm AI Guidance</span>
+        <span class="logo" aria-hidden="true"></span>
+        <div class="subBrand">
+          <span>SteadyPilot</span>
+          <small>Decision Intelligence • Calm AI Guidance</small>
         </div>
       </div>
 
-      <nav class="tabs" aria-label="Primary">
-        <a class="tab" href="index.html">Home</a>
-        <a class="tab active" href="analyze.html">Health Score</a>
-        <a class="tab" href="index.html#reports">Reports</a>
-        <a class="tab" href="index.html#faq">FAQ</a>
-      </nav>
-
-      <div class="rightTools">
-        <a class="pill">Beta • v1 Analyzer</a>
-        <a class="pill emailPill" href="mailto:contact@steadypilot.ai"><b>contact@steadypilot.ai</b></a>
-        <a class="btn" href="index.html">← Back</a>
+      <div class="nav">
+        <a class="link" href="index.html">Home</a>
+        <span class="pill">Health Score</span>
+        <span class="link">contact@steadypilot.ai</span>
+        <a class="btn" href="index.html#pricing">Pricing</a>
+        <a class="btn primary" href="index.html#beta">Join Beta</a>
       </div>
-    </header>
-
-    <div class="grid">
-      <!-- Inputs -->
-      <section class="card">
-        <div class="hTitle">Restaurant Inputs</div>
-        <p class="p">Enter simple monthly numbers. We’ll calculate a calm, conservative score (v1).</p>
-
-        <div class="formGrid">
-          <div class="row2">
-            <div>
-              <label>Monthly Revenue ($)</label>
-              <input id="revenue" type="number" placeholder="e.g. 45000" />
-            </div>
-            <div>
-              <label>Monthly Rent ($)</label>
-              <input id="rent" type="number" placeholder="e.g. 9000" />
-            </div>
-          </div>
-
-          <div class="row2">
-            <div>
-              <label>Monthly Labor Cost ($)</label>
-              <input id="labor" type="number" placeholder="e.g. 16000" />
-            </div>
-            <div>
-              <label>Food Cost %</label>
-              <input id="food" type="number" placeholder="e.g. 31" />
-            </div>
-          </div>
-
-          <button class="primaryBtn" onclick="calculate()">Analyze</button>
-          <div class="hint">Tip: v1 stays simple & trustworthy — no overwhelm.</div>
-        </div>
-      </section>
-
-      <!-- Results (Dashboard style) -->
-      <section class="card">
-        <div class="hTitle">Dashboard Result</div>
-        <p class="p">A score + one clear recommendation — based on your inputs.</p>
-
-        <div id="result" class="resultGrid">
-          <div class="hint">Enter numbers and click Analyze.</div>
-        </div>
-      </section>
     </div>
+
+    <section class="header">
+      <div class="headerInner">
+        <h1>Smarter decisions for independent restaurants.</h1>
+        <p class="lead">
+          Turn everyday numbers into one clear priority — weekly or monthly, based on your restaurant's situation.
+        </p>
+      </div>
+    </section>
+
+    <section class="grid">
+
+      <!-- LEFT: Dashboard output like screenshot -->
+      <div class="card">
+        <h2>Dashboard</h2>
+        <div class="muted">Health score + one clear recommendation, with key inputs.</div>
+
+        <div class="kpiGrid" style="margin-top:14px;">
+          <!-- Health Score card -->
+          <div class="kpi">
+            <div class="kpiTop">
+              <div class="muted" style="margin:0;">Restaurant Health Score</div>
+              <span id="statusBadge" class="badge warn">Waiting</span>
+            </div>
+
+            <div class="healthBlock">
+              <div id="ring" class="ring" style="--p:0; --ring: var(--warn);">
+                <div class="ringInner">
+                  <div id="ringNum" class="ringNum">—</div>
+                  <div class="ringSmall">/ 100</div>
+                </div>
+              </div>
+
+              <div style="min-width: 220px;">
+                <div class="scoreRow">
+                  <div id="scoreBig" class="scoreNum">—</div>
+                  <div class="scoreDen">/ 100</div>
+                </div>
+                <div class="priorityTitle">One clear priority</div>
+                <div id="priorityText" class="priorityText">Enter numbers on the right and click Analyze.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recommendation card -->
+          <div class="kpi">
+            <div class="kpiTop">
+              <div class="muted" style="margin:0;">One Clear Recommendation</div>
+              <span id="recBadge" class="badge" style="color:var(--accent)">AI</span>
+            </div>
+
+            <div class="recoCard">
+              <div class="recoInner">
+                <div id="recText" class="recoText">Run an analysis to generate a calm, practical recommendation.</div>
+                <a class="recoBtn" href="#inputs">See Recommendation →</a>
+              </div>
+            </div>
+
+            <div class="muted" style="margin-top:12px;">Key inputs</div>
+            <div class="inputsList">
+              <div class="inputItem"><span>Sales</span><b id="kSales">—</b></div>
+              <div class="inputItem"><span>Labor</span><b id="kLabor">—</b></div>
+              <div class="inputItem"><span>Food costs</span><b id="kFood">—</b></div>
+              <div class="inputItem"><span>Rent</span><b id="kRent">—</b></div>
+            </div>
+
+            <div class="muted" style="margin-top:12px;">
+              Adaptive analysis frequency: <b id="kFreq" style="color:var(--text)">—</b>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: Inputs (clean, executive) -->
+      <div class="card" id="inputs">
+        <h2>Enter your numbers</h2>
+        <div class="muted">Simple monthly inputs. Conservative, trustworthy scoring (v1).</div>
+
+        <div class="row2">
+          <div>
+            <label>Monthly Revenue ($)</label>
+            <input id="revenue" type="number" placeholder="e.g. 45000" />
+          </div>
+          <div>
+            <label>Monthly Rent ($)</label>
+            <input id="rent" type="number" placeholder="e.g. 9000" />
+          </div>
+        </div>
+
+        <div class="row2">
+          <div>
+            <label>Monthly Labor Cost ($)</label>
+            <input id="labor" type="number" placeholder="e.g. 16000" />
+          </div>
+          <div>
+            <label>Food Cost %</label>
+            <input id="food" type="number" placeholder="e.g. 31" />
+          </div>
+        </div>
+
+        <button class="analyzeBtn" onclick="calculate()">Analyze</button>
+        <div class="muted" style="margin-top:10px;">
+          Tip: keep it simple. You want one action — not a 10-page report.
+        </div>
+      </div>
+
+    </section>
+
+    <footer class="footer">
+      <div><b>SteadyPilot</b> <span class="tiny">— Smarter decisions for independent restaurants.</span></div>
+      <div class="tiny">© <span id="year"></span> SteadyPilot • Beta</div>
+    </footer>
+
   </div>
 
-<script>
-function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
 
-function pointsFromBands(value, bands){
-  for (const b of bands){
-    if (value <= b.max) return b.pts;
-  }
-  return bands[bands.length - 1].pts;
-}
+    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
 
-function calculate(){
-  const revenue = parseFloat(document.getElementById("revenue").value);
-  const rent = parseFloat(document.getElementById("rent").value);
-  const labor = parseFloat(document.getElementById("labor").value);
-  const foodPct = parseFloat(document.getElementById("food").value);
+    function pointsFromBands(value, bands){
+      for (const b of bands){
+        if (value <= b.max) return b.pts;
+      }
+      return bands[bands.length - 1].pts;
+    }
 
-  if (!revenue || !rent || !labor || !foodPct){
-    alert("Please fill all fields.");
-    return;
-  }
+    function money(n){
+      if (!isFinite(n)) return "—";
+      return "$" + Math.round(n).toLocaleString();
+    }
 
-  const rentRatio = (rent / revenue) * 100;
-  const laborRatio = (labor / revenue) * 100;
+    function calculate(){
+      const revenue = parseFloat(document.getElementById("revenue").value);
+      const rent = parseFloat(document.getElementById("rent").value);
+      const labor = parseFloat(document.getElementById("labor").value);
+      const foodPct = parseFloat(document.getElementById("food").value);
 
-  // Conservative net margin estimate (simple v1):
-  const netMargin = 100 - (rentRatio + laborRatio + foodPct);
+      if (!revenue || !rent || !labor || !foodPct){
+        alert("Please fill all fields.");
+        return;
+      }
 
-  const rentPts = pointsFromBands(rentRatio, [
-    { max: 10, pts: 25 },
-    { max: 18, pts: 18 },
-    { max: 1000, pts: 10 }
-  ]);
+      const rentRatio = (rent / revenue) * 100;
+      const laborRatio = (labor / revenue) * 100;
 
-  const laborPts = (laborRatio >= 25 && laborRatio <= 30) ? 25
-    : (laborRatio <= 35 ? 18 : 10);
+      // Conservative net margin estimate (simple v1):
+      const netMargin = 100 - (rentRatio + laborRatio + foodPct);
 
-  const foodPts = (foodPct >= 26 && foodPct <= 30) ? 25
-    : (foodPct <= 34 ? 18 : 10);
+      // Each category: 0..25 points (conservative bands)
+      const rentPts = pointsFromBands(rentRatio, [
+        { max: 10, pts: 25 },
+        { max: 18, pts: 18 },
+        { max: 1000, pts: 10 }
+      ]);
 
-  const marginPts = (netMargin >= 12) ? 25
-    : (netMargin >= 7 ? 18 : 10);
+      const laborPts = (laborRatio >= 25 && laborRatio <= 30) ? 25
+        : (laborRatio <= 35 ? 18 : 10);
 
-  const score = clamp(Math.round(rentPts + laborPts + foodPts + marginPts), 0, 100);
+      const foodPts = (foodPct >= 26 && foodPct <= 30) ? 25
+        : (foodPct <= 34 ? 18 : 10);
 
-  let status = "Stable";
-  let cls = "good";
-  let ring = "var(--good)";
-  let pressure = "Low pressure";
-  let priority = "Keep your core costs stable and protect margin with small weekly adjustments.";
-  let freq = "Monthly (Stable)";
+      const marginPts = (netMargin >= 12) ? 25
+        : (netMargin >= 7 ? 18 : 10);
 
-  if (score < 50){
-    status = "High Risk";
-    cls = "bad";
-    ring = "var(--bad)";
-    pressure = "High pressure";
-    priority = "Focus on cash stability: reduce cost pressure (labor/food) before adding new expenses.";
-    freq = "Weekly (Needed)";
-  } else if (score < 75){
-    status = "Moderate Risk";
-    cls = "warn";
-    ring = "var(--warn)";
-    pressure = "Moderate pressure";
-    priority = "Protect margin this month: tune portion sizes or pricing on your highest-volume items.";
-    freq = "Weekly (Short-term) → Monthly when stable";
-  }
+      const score = clamp(Math.round(rentPts + laborPts + foodPts + marginPts), 0, 100);
 
-  const result = document.getElementById("result");
-  result.innerHTML = `
-    <div class="panel">
-      <div class="scoreTop">
-        <div style="font-weight:1000;">Restaurant Health Score</div>
-        <span class="badge ${cls}">${pressure}</span>
-      </div>
+      let status = "Stable";
+      let badgeClass = "good";
+      let ringColor = "var(--good)";
+      let onePriority = "Keep core costs stable and protect margin with small weekly adjustments.";
+      let reco = "Boost your slow weekday sales to stabilize cash flow.";
+      let freq = "Monthly (Stable)";
 
-      <div class="scoreRow">
-        <div class="ring" style="--p:${score}; --ring:${ring};">
-          <div class="ringInner">
-            <div class="scoreNum">${score}</div>
-            <div class="scoreSmall">/ 100</div>
-          </div>
-        </div>
+      if (score < 50){
+        status = "High Risk";
+        badgeClass = "bad";
+        ringColor = "var(--bad)";
+        onePriority = "Focus on cash stability: reduce cost pressure (labor/food) before adding new expenses.";
+        reco = "Stabilize cash this week: cut waste + tighten labor scheduling + pause non-urgent spending.";
+        freq = "Weekly (Needed)";
+      } else if (score < 75){
+        status = "Moderate Risk";
+        badgeClass = "warn";
+        ringColor = "var(--warn)";
+        onePriority = "Protect margin this month: tune portion size or pricing on highest-volume items.";
+        reco = "Protect margin this month: adjust portion size or pricing on your top sellers.";
+        freq = "Weekly (Sometimes)";
+      }
 
-        <div style="min-width:220px;">
-          <div class="badge ${cls}">${status}</div>
-          <div class="bigLine">One Clear Recommendation</div>
-          <div class="smallLine">${priority}</div>
-          <div class="hint">Conservative benchmark bands for independent restaurants (v1).</div>
-        </div>
-      </div>
-    </div>
+      // Dashboard updates
+      const badge = document.getElementById("statusBadge");
+      badge.className = "badge " + badgeClass;
+      badge.textContent = status;
 
-    <div class="panel">
-      <div class="scoreTop">
-        <div style="font-weight:1000;">Key inputs</div>
-        <span class="badge good">${freq}</span>
-      </div>
+      const ring = document.getElementById("ring");
+      ring.style.setProperty("--p", score);
+      ring.style.setProperty("--ring", ringColor);
 
-      <div class="kv">
-        <div class="kvItem"><span>Rent ratio</span><b>${rentRatio.toFixed(1)}% (${rentPts}/25)</b></div>
-        <div class="kvItem"><span>Labor ratio</span><b>${laborRatio.toFixed(1)}% (${laborPts}/25)</b></div>
-        <div class="kvItem"><span>Food cost</span><b>${foodPct.toFixed(1)}% (${foodPts}/25)</b></div>
-        <div class="kvItem"><span>Net margin (estimate)</span><b>${netMargin.toFixed(1)}% (${marginPts}/25)</b></div>
-      </div>
+      document.getElementById("ringNum").textContent = score;
+      document.getElementById("scoreBig").textContent = score;
+      document.getElementById("priorityText").textContent = onePriority;
 
-      <div class="hint">Next step (v2): Reports + history tracking + AI explainers.</div>
-    </div>
-  `;
-}
-</script>
+      document.getElementById("recText").textContent = reco;
 
+      document.getElementById("kSales").textContent = money(revenue) + " / month";
+      document.getElementById("kRent").textContent  = money(rent) + " / month";
+      document.getElementById("kLabor").textContent = money(labor) + " / month";
+      document.getElementById("kFood").textContent  = foodPct.toFixed(0) + "%";
+      document.getElementById("kFreq").textContent  = freq;
+
+      // scroll a bit up so user sees dashboard output
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  </script>
 </body>
 </html>
