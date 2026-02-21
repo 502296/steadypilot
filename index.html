@@ -7,249 +7,272 @@
 
   <style>
     :root{
-      /* Apple / Silicon Valley dark */
-      --bg0:#070A10;
-      --bg1:#0A0F1A;
-      --grid: rgba(255,255,255,.04);
+      --bg0:#06070B;
+      --bg1:#0A0D14;
       --text:#EAF0FF;
-      --muted: rgba(234,240,255,.70);
-      --faint: rgba(234,240,255,.45);
+      --muted:rgba(234,240,255,.70);
+      --faint:rgba(234,240,255,.45);
 
-      --card: rgba(255,255,255,.06);
-      --card2: rgba(255,255,255,.045);
-      --stroke: rgba(255,255,255,.10);
-      --stroke2: rgba(255,255,255,.08);
-      --shadow: 0 24px 60px rgba(0,0,0,.55);
+      --card:rgba(255,255,255,.05);
+      --stroke:rgba(255,255,255,.10);
+      --stroke2:rgba(255,255,255,.07);
 
-      /* modern accent (calm neon) */
-      --a1:#7DD3FC;
-      --a2:#A78BFA;
-      --a3:#34D399;
-
+      --a1:#7DD3FC; /* calm cyan */
+      --a2:#A78BFA; /* calm violet */
       --good:#34D399;
       --warn:#FBBF24;
       --bad:#FB7185;
 
-      --r: 18px;
-      --r2: 14px;
+      --r:18px;
+      --shadow: 0 30px 80px rgba(0,0,0,.60);
     }
 
-    *{ box-sizing:border-box }
-    html,body{ height:100% }
+    *{box-sizing:border-box}
+    html,body{height:100%}
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       background:
-        radial-gradient(900px 520px at 20% 10%, rgba(125,211,252,.14), transparent 60%),
-        radial-gradient(900px 520px at 80% 20%, rgba(167,139,250,.12), transparent 65%),
+        radial-gradient(900px 520px at 18% 12%, rgba(125,211,252,.14), transparent 60%),
+        radial-gradient(900px 520px at 82% 18%, rgba(167,139,250,.12), transparent 65%),
         linear-gradient(180deg, var(--bg1), var(--bg0));
       overflow-x:hidden;
     }
 
-    /* subtle grid like modern SaaS */
+    /* subtle silicon valley grid */
     body:before{
       content:"";
       position:fixed; inset:0;
       background-image:
-        linear-gradient(var(--grid) 1px, transparent 1px),
-        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-      background-size: 64px 64px;
-      mask-image: radial-gradient(900px 600px at 50% 20%, rgba(0,0,0,1), transparent 70%);
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size: 70px 70px;
+      mask-image: radial-gradient(900px 600px at 50% 15%, rgba(0,0,0,1), transparent 70%);
       pointer-events:none;
-      opacity:.8;
     }
 
-    a{ color:inherit; text-decoration:none }
-    .wrap{ max-width:1100px; margin:0 auto; padding:20px 16px 80px; position:relative; }
+    .wrap{ max-width:1120px; margin:0 auto; padding:18px 16px 70px; }
 
-    /* Top nav */
+    /* Top bar (thin / calm) */
     .top{
       display:flex; align-items:center; justify-content:space-between; gap:12px;
-      padding: 10px 10px 18px;
+      padding:10px 4px 18px;
     }
     .brand{
       display:flex; align-items:center; gap:10px;
-      font-weight:800; letter-spacing:.2px;
+      font-weight:750; letter-spacing:.1px;
     }
-    .mark{
+    .logo{
       width:34px; height:34px; border-radius:12px;
       background: linear-gradient(135deg, rgba(125,211,252,.95), rgba(167,139,250,.95));
+      box-shadow: 0 14px 36px rgba(0,0,0,.45);
       position:relative;
-      box-shadow: 0 10px 28px rgba(0,0,0,.35);
     }
-    .mark:after{
-      content:""; position:absolute; inset:9px; border-radius:10px;
-      background: rgba(0,0,0,.35);
+    .logo:after{
+      content:"";
+      position:absolute; inset:9px;
+      border-radius:10px;
       border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.28);
     }
-    .tag{
-      font-size:12px; color:var(--muted); font-weight:700;
+    .brand small{
+      display:block;
+      color:var(--muted);
+      font-weight:650;
+      font-size:12px;
       margin-top:2px;
     }
-    .navlinks{
-      display:flex; gap:14px; align-items:center; flex-wrap:wrap;
-      color: rgba(234,240,255,.78);
-      font-size:13px; font-weight:700;
-    }
-    .navlinks a{ padding:8px 10px; border-radius:999px; }
-    .navlinks a:hover{ background: rgba(255,255,255,.06); }
-
-    .rightTop{
+    .topRight{
       display:flex; align-items:center; gap:10px; flex-wrap:wrap;
     }
     .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:8px 12px; border-radius:999px;
+      padding:8px 12px;
+      border-radius:999px;
       border:1px solid var(--stroke);
       background: rgba(255,255,255,.05);
-      font-size:12px; font-weight:800;
-      color: rgba(234,240,255,.86);
+      color: rgba(234,240,255,.85);
+      font-size:12px;
+      font-weight:800;
       backdrop-filter: blur(10px);
     }
     .cta{
-      display:inline-flex; align-items:center; justify-content:center;
+      border:0;
       padding:10px 14px;
       border-radius:999px;
-      border:0;
-      background: linear-gradient(135deg, rgba(125,211,252,.95), rgba(167,139,250,.95));
-      color:#07101f;
       font-weight:900;
       font-size:13px;
       cursor:pointer;
-      box-shadow: 0 14px 35px rgba(0,0,0,.45);
+      color:#07101f;
+      background: linear-gradient(135deg, rgba(125,211,252,.95), rgba(167,139,250,.95));
+      box-shadow: 0 18px 45px rgba(0,0,0,.45);
     }
     .cta:active{ transform: translateY(1px); }
 
-    /* Layout */
+    /* Layout: left (big score) + right (tiles) */
     .grid{
       display:grid;
       grid-template-columns: 1.35fr .85fr;
       gap:14px;
       align-items:start;
     }
-    @media (max-width: 980px){
-      .grid{ grid-template-columns:1fr; }
+    @media(max-width:980px){
+      .grid{ grid-template-columns: 1fr; }
     }
 
-    .card{
+    .panel{
       border:1px solid var(--stroke2);
-      background: var(--card);
+      background: rgba(255,255,255,.045);
       border-radius: var(--r);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-    }
-    .card.pad{ padding:18px 18px; }
-
-    h1{
-      margin:0;
-      font-size:26px;
-      letter-spacing:-.4px;
-      line-height:1.15;
-    }
-    .sub{
-      margin-top:8px;
-      color:var(--muted);
-      font-size:13px;
-      font-weight:650;
-      line-height:1.55;
+      backdrop-filter: blur(12px);
     }
 
-    /* Main score area */
-    .scoreTop{
+    /* LEFT: Minimal hero */
+    .hero{ padding:20px; }
+    .heroHead{
       display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
       align-items:flex-start;
       margin-bottom:14px;
     }
-    .miniPills{ display:flex; gap:8px; flex-wrap:wrap; }
-    .miniPills .pill{ padding:7px 10px; font-size:11px; }
+    .hero h1{
+      margin:0;
+      font-size:20px;
+      font-weight:850;
+      letter-spacing:-.2px;
+    }
+    .hero p{
+      margin:6px 0 0;
+      color: var(--muted);
+      font-size:12.5px;
+      font-weight:650;
+      line-height:1.55;
+      max-width:56ch;
+    }
 
-    .scoreArea{
+    .miniRow{
+      display:flex; gap:8px; flex-wrap:wrap; align-items:center;
+      margin-top:10px;
+    }
+    .chip{
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.05);
+      font-size:11px;
+      font-weight:850;
+      color: rgba(234,240,255,.82);
+    }
+
+    /* Big ring area */
+    .scoreRow{
       display:grid;
-      grid-template-columns: 190px 1fr;
-      gap:16px;
+      grid-template-columns: 320px 1fr;
+      gap:18px;
       align-items:center;
-      margin-top:6px;
+      margin-top:8px;
+      padding-top:10px;
     }
-    @media (max-width: 560px){
-      .scoreArea{ grid-template-columns: 1fr; }
+    @media(max-width:860px){
+      .scoreRow{ grid-template-columns:1fr; }
     }
+
+    .ringWrap{ display:grid; place-items:center; }
 
     .ring{
-      --p: 0;
-      --ring: var(--a3);
-      width: 170px; height:170px;
+      --p:0;
+      --ring: var(--a1);
+      width:280px; height:280px;
       border-radius:50%;
-      display:grid; place-items:center;
       background:
         conic-gradient(var(--ring) calc(var(--p)*1%), rgba(255,255,255,.10) 0);
       border:1px solid var(--stroke);
-      margin: 0 auto;
+      display:grid; place-items:center;
+      position:relative;
+      box-shadow: 0 22px 60px rgba(0,0,0,.55);
+    }
+    .ring:before{
+      content:"";
+      position:absolute; inset:18px;
+      border-radius:50%;
+      background: rgba(0,0,0,.30);
+      border:1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(8px);
     }
     .ringInner{
-      width: 132px; height:132px;
-      border-radius:50%;
-      background: rgba(0,0,0,.34);
-      border:1px solid rgba(255,255,255,.10);
-      display:grid; place-items:center;
+      position:relative;
       text-align:center;
-      padding:10px;
+      width: 70%;
     }
-    .scoreNum{
-      font-size:44px;
-      font-weight:900;
-      letter-spacing:-.8px;
+    .bigNum{
+      font-size:72px;
       line-height:1;
+      font-weight:950;
+      letter-spacing:-1.6px;
     }
-    .scoreSmall{
-      margin-top:6px;
-      font-size:12px;
-      color:var(--muted);
-      font-weight:800;
+    .bigLabel{
+      margin-top:8px;
+      font-size:13px;
+      font-weight:850;
+      color: rgba(234,240,255,.72);
     }
 
-    .statusRow{
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-      margin-bottom:8px;
+    .meta{
+      margin-top:10px;
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:center;
+      color: rgba(234,240,255,.70);
+      font-size:12px;
+      font-weight:750;
+    }
+    .dot{
+      width:5px; height:5px; border-radius:99px; background: rgba(234,240,255,.35);
+      display:inline-block;
+    }
+
+    /* Right side of left panel: minimal text + actions */
+    .focus{
+      padding:4px 0;
+    }
+    .status{
+      display:flex; align-items:center; gap:10px; flex-wrap:wrap;
     }
     .badge{
-      display:inline-flex; align-items:center;
-      padding:6px 10px;
+      padding:7px 10px;
       border-radius:999px;
       border:1px solid var(--stroke);
       background: rgba(255,255,255,.05);
       font-weight:900;
       font-size:12px;
     }
-    .good{ color:var(--good); }
-    .warn{ color:var(--warn); }
-    .bad{ color:var(--bad); }
+    .good{ color: var(--good); }
+    .warn{ color: var(--warn); }
+    .bad{ color: var(--bad); }
 
+    .oneLine{
+      margin-top:12px;
+      font-size:14px;
+      font-weight:900;
+      letter-spacing:-.2px;
+    }
     .priority{
       margin-top:6px;
-      font-weight:900;
-      font-size:14px;
-      letter-spacing:-.15px;
-    }
-    .priorityText{
-      margin-top:6px;
       color: rgba(234,240,255,.78);
-      font-weight:750;
       font-size:13px;
+      font-weight:700;
       line-height:1.55;
+      max-width:60ch;
     }
 
-    .actionsRow{
+    .btnRow{
       display:flex; gap:10px; flex-wrap:wrap;
-      margin-top:12px;
+      margin-top:14px;
     }
     .btn{
-      display:inline-flex; align-items:center; justify-content:center;
-      padding:10px 12px;
-      border-radius: 12px;
       border:1px solid var(--stroke);
       background: rgba(255,255,255,.05);
-      color: rgba(234,240,255,.9);
+      color: rgba(234,240,255,.90);
+      padding:11px 14px;
+      border-radius: 14px;
       font-weight:900;
       font-size:13px;
       cursor:pointer;
@@ -257,144 +280,107 @@
     .btn:hover{ background: rgba(255,255,255,.08); }
     .btnPrimary{
       border:0;
-      background: linear-gradient(135deg, rgba(125,211,252,.95), rgba(167,139,250,.95));
       color:#07101f;
-      box-shadow: 0 14px 35px rgba(0,0,0,.35);
+      background: linear-gradient(135deg, rgba(125,211,252,.95), rgba(167,139,250,.95));
+      box-shadow: 0 18px 45px rgba(0,0,0,.40);
     }
     .btnPrimary:active{ transform: translateY(1px); }
 
-    .miniStats{
-      margin-top:14px;
+    /* Results (hidden until analyze) */
+    .results{
+      margin-top:16px;
+      padding:14px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.035);
+      display:none;
+    }
+    .resultsGrid{
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap:10px;
+      margin-top:10px;
     }
-    @media (max-width:560px){ .miniStats{ grid-template-columns:1fr; } }
+    @media(max-width:560px){ .resultsGrid{ grid-template-columns:1fr; } }
 
     .stat{
-      border:1px solid var(--stroke2);
-      background: var(--card2);
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.22);
       border-radius: 14px;
-      padding:12px 12px;
+      padding:12px;
     }
-    .stat .k{ color:var(--faint); font-size:12px; font-weight:800; }
+    .stat .k{ color: var(--faint); font-size:12px; font-weight:800; }
     .stat .v{ margin-top:6px; font-size:16px; font-weight:950; }
 
-    .hint{
+    .tinyHint{
       margin-top:12px;
-      color: rgba(234,240,255,.62);
+      color: rgba(234,240,255,.60);
       font-size:12px;
       font-weight:700;
     }
 
-    /* Inputs (collapsible) */
-    details{
-      margin-top:14px;
-      border:1px solid var(--stroke2);
-      background: rgba(255,255,255,.035);
-      border-radius: var(--r);
-      overflow:hidden;
-    }
-    summary{
-      list-style:none;
-      cursor:pointer;
-      padding:14px 14px;
-      display:flex; align-items:center; justify-content:space-between;
-      gap:10px;
-      font-weight:900;
-      color: rgba(234,240,255,.90);
-    }
-    summary::-webkit-details-marker{ display:none; }
-    .chev{
-      width:28px; height:28px; border-radius:10px;
-      border:1px solid var(--stroke);
-      display:grid; place-items:center;
-      color: rgba(234,240,255,.75);
-      background: rgba(255,255,255,.04);
-      font-weight:900;
-    }
-    .inputsBody{ padding: 0 14px 14px; }
-
-    label{
-      display:block;
-      margin:12px 0 6px;
-      color: rgba(234,240,255,.70);
-      font-weight:800;
-      font-size:12px;
-    }
-    input{
-      width:100%;
-      padding:12px 12px;
-      border-radius: 12px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.28);
-      color: var(--text);
-      outline:none;
-      font-weight:800;
-      font-size:14px;
-    }
-    input::placeholder{ color: rgba(234,240,255,.35); font-weight:700; }
-    .row2{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
-    @media (max-width:560px){ .row2{ grid-template-columns:1fr; } }
-    .fullAnalyze{
-      width:100%;
-      margin-top:12px;
-      padding:12px 14px;
-      border-radius: 14px;
-      border:0;
-      cursor:pointer;
-      font-weight:950;
-      color:#07101f;
-      background: linear-gradient(135deg, rgba(125,211,252,.95), rgba(167,139,250,.95));
-    }
-
-    /* Right actions panel */
-    .panelTitle{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      padding-bottom:10px;
+    /* RIGHT: Tiles (clean, not list-heavy) */
+    .tiles{ padding:18px; }
+    .tilesHead{
+      display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+      padding-bottom:12px;
       border-bottom:1px solid rgba(255,255,255,.08);
       margin-bottom:12px;
     }
-    .panelTitle h2{
+    .tilesHead h2{
       margin:0;
-      font-size:14px;
-      letter-spacing:-.2px;
+      font-size:13px;
       font-weight:950;
+      letter-spacing:-.15px;
     }
-    .panelTitle .tiny{
-      color: rgba(234,240,255,.65);
+    .tilesHead p{
+      margin:0;
+      color: rgba(234,240,255,.62);
       font-size:12px;
-      font-weight:750;
-      line-height:1.3;
+      font-weight:700;
       text-align:right;
       max-width:220px;
+      line-height:1.3;
     }
-    .actionList{ display:grid; gap:10px; }
 
-    .action{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      padding:12px 12px;
-      border-radius: 14px;
+    .tileGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    .tile{
       border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.045);
+      background: rgba(255,255,255,.04);
+      border-radius: 16px;
+      padding:12px 12px;
       cursor:pointer;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      min-height:58px;
     }
-    .action:hover{ background: rgba(255,255,255,.065); }
-    .action .left{
-      display:flex; flex-direction:column; gap:3px;
-    }
-    .action .t{ font-weight:950; font-size:13px; letter-spacing:-.15px; }
-    .action .d{ font-weight:750; font-size:12px; color: rgba(234,240,255,.62); }
-    .action .go{
-      width:30px; height:30px; border-radius:12px;
+    .tile:hover{ background: rgba(255,255,255,.06); }
+
+    .tile .l{ display:flex; flex-direction:column; gap:3px; }
+    .tile .t{ font-weight:950; font-size:13px; letter-spacing:-.1px; }
+    .tile .d{ color: rgba(234,240,255,.60); font-weight:700; font-size:11.5px; }
+
+    .ico{
+      width:34px; height:34px;
+      border-radius: 14px;
       border:1px solid rgba(255,255,255,.12);
-      display:grid; place-items:center;
-      color: rgba(234,240,255,.70);
       background: rgba(0,0,0,.18);
+      display:grid; place-items:center;
       font-weight:900;
+      color: rgba(234,240,255,.75);
     }
 
-    .footer{
+    .wide{
+      grid-column: 1 / -1;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+
+    .foot{
       margin-top:12px;
       padding-top:12px;
       border-top:1px solid rgba(255,255,255,.08);
@@ -403,204 +389,225 @@
       font-weight:700;
       font-size:12px;
     }
+
+    /* Modal sheet for inputs (Edit Inputs) */
+    .modal{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      z-index:50;
+    }
+    .sheet{
+      width: min(720px, 100%);
+      border-radius: 20px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(12,14,22,.88);
+      box-shadow: 0 30px 90px rgba(0,0,0,.70);
+      backdrop-filter: blur(16px);
+      overflow:hidden;
+    }
+    .sheetTop{
+      padding:14px 16px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .sheetTop b{ font-size:13px; letter-spacing:-.1px; }
+    .x{
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      color: rgba(234,240,255,.85);
+      border-radius: 14px;
+      width:38px; height:38px;
+      cursor:pointer;
+      font-weight:900;
+    }
+    .sheetBody{ padding:14px 16px 16px; }
+    .row2{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+    @media(max-width:560px){ .row2{ grid-template-columns:1fr; } }
+    label{ display:block; margin:10px 0 6px; color: rgba(234,240,255,.68); font-size:12px; font-weight:800; }
+    input{
+      width:100%;
+      padding:12px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.25);
+      color: var(--text);
+      outline:none;
+      font-weight:800;
+      font-size:14px;
+    }
+    input::placeholder{ color: rgba(234,240,255,.35); }
+
+    .sheetActions{
+      display:flex; gap:10px; flex-wrap:wrap;
+      padding-top:12px;
+    }
   </style>
 </head>
 
 <body>
   <div class="wrap">
 
-    <!-- Top Nav -->
     <div class="top">
-      <div>
-        <div class="brand">
-          <span class="mark"></span>
-          <div>
-            <div>SteadyPilot</div>
-            <div class="tag">Decision Intelligence • Calm AI Guidance</div>
-          </div>
+      <div class="brand">
+        <span class="logo"></span>
+        <div>
+          <div>SteadyPilot</div>
+          <small>Decision Intelligence • Calm AI Guidance</small>
         </div>
       </div>
 
-      <div class="navlinks">
-        <a href="index.html">Home</a>
-        <a href="health.html" style="background:rgba(255,255,255,.06);">Health Score</a>
-        <a href="#reports">Reports</a>
-        <a href="#faq">FAQ</a>
-      </div>
-
-      <div class="rightTop">
+      <div class="topRight">
         <div class="pill">Beta • Early Access</div>
         <div class="pill">contact@steadypilot.ai</div>
-        <button class="cta" onclick="alert('Join Beta: connect this to your form later.');">Join Beta</button>
+        <button class="cta" onclick="alert('Join Beta (connect to your form later).')">Join Beta</button>
       </div>
     </div>
 
     <div class="grid">
 
-      <!-- LEFT: Main Score -->
-      <div class="card pad">
-        <div class="scoreTop">
+      <!-- LEFT: Minimal Score Experience -->
+      <div class="panel hero">
+        <div class="heroHead">
           <div>
             <h1>Restaurant Health Score</h1>
-            <div class="sub">Clean, conservative score + one clear priority. Everything else stays behind buttons (right panel).</div>
-          </div>
-          <div class="miniPills">
-            <div class="pill">v1 • Simple & Trustworthy</div>
-            <div class="pill" id="pillStatus">Waiting</div>
+            <p>Minimal on purpose. Big score + one priority. Everything else stays behind buttons.</p>
+
+            <div class="miniRow">
+              <span class="chip">v2 • Clean UI</span>
+              <span class="chip" id="chipState">Waiting</span>
+            </div>
           </div>
         </div>
 
-        <div class="scoreArea">
-          <div>
-            <div class="ring" id="ring" style="--p:0; --ring: var(--a3);">
+        <div class="scoreRow">
+          <div class="ringWrap">
+            <div class="ring" id="ring" style="--p:0; --ring: var(--a1);">
               <div class="ringInner">
-                <div class="scoreNum" id="scoreNum">—</div>
-                <div class="scoreSmall">/ 100</div>
+                <div class="bigNum" id="scoreNum">—</div>
+                <div class="bigLabel">Health Score</div>
               </div>
+            </div>
+
+            <div class="meta">
+              <span id="metaFreq">Adaptive: —</span>
+              <span class="dot"></span>
+              <span id="metaUpdated">Last update: —</span>
             </div>
           </div>
 
-          <div>
-            <div class="statusRow">
-              <div class="badge good" id="statusBadge">Stable</div>
-              <div class="badge" id="watchBadge" style="color:rgba(234,240,255,.72);">Watch margin</div>
+          <div class="focus">
+            <div class="status">
+              <span class="badge good" id="badgeStatus">Stable</span>
+              <span class="badge" id="badgeWatch" style="color:rgba(234,240,255,.75)">Watch margin</span>
             </div>
 
-            <div class="priority">One clear priority:</div>
-            <div class="priorityText" id="priorityText">
-              Enter your numbers and click Analyze.
+            <div class="oneLine">One clear priority</div>
+            <div class="priority" id="priorityText">
+              Tap <b>Edit Inputs</b>, enter your numbers, then click <b>Analyze</b>.
             </div>
 
-            <div class="actionsRow">
+            <div class="btnRow">
               <button class="btn btnPrimary" onclick="calculate()">Analyze</button>
-              <button class="btn" onclick="alert('Recommendation page later (v2).');">See Recommendation →</button>
+              <button class="btn" onclick="openInputs()">Edit Inputs</button>
+              <button class="btn" onclick="alert('Recommendation page later (v3).')">See Recommendation →</button>
             </div>
 
-            <div class="miniStats">
-              <div class="stat">
-                <div class="k">Net margin estimate</div>
-                <div class="v" id="mStat">—</div>
+            <div class="results" id="results">
+              <div style="font-weight:950; letter-spacing:-.15px;">Results</div>
+              <div class="resultsGrid">
+                <div class="stat">
+                  <div class="k">Net margin estimate</div>
+                  <div class="v" id="mStat">—</div>
+                </div>
+                <div class="stat">
+                  <div class="k">Cost pressure</div>
+                  <div class="v" id="pStat">—</div>
+                </div>
               </div>
-              <div class="stat">
-                <div class="k">Cost pressure</div>
-                <div class="v" id="pStat">—</div>
-              </div>
+              <div class="tinyHint">Conservative v1 bands (rent, labor, food, margin). No hidden tricks.</div>
             </div>
-
-            <div class="hint">Tip: Keep inputs monthly. This is intentionally simple (no overwhelm).</div>
           </div>
         </div>
-
-        <!-- Inputs hidden inside Edit Inputs -->
-        <details id="inputsBox" open>
-          <summary>
-            <span>Inputs (monthly)</span>
-            <span class="chev" id="chev">⌄</span>
-          </summary>
-          <div class="inputsBody">
-            <div class="row2">
-              <div>
-                <label>Monthly Revenue ($)</label>
-                <input id="revenue" type="number" placeholder="e.g. 45000" />
-              </div>
-              <div>
-                <label>Monthly Rent ($)</label>
-                <input id="rent" type="number" placeholder="e.g. 9000" />
-              </div>
-            </div>
-
-            <div class="row2">
-              <div>
-                <label>Monthly Labor Cost ($)</label>
-                <input id="labor" type="number" placeholder="e.g. 16000" />
-              </div>
-              <div>
-                <label>Food Cost %</label>
-                <input id="food" type="number" placeholder="e.g. 31" />
-              </div>
-            </div>
-
-            <button class="fullAnalyze" onclick="calculate()">Analyze</button>
-
-            <div class="hint">v1 uses conservative bands (rent, labor, food, margin). No hidden tricks.</div>
-          </div>
-        </details>
       </div>
 
-      <!-- RIGHT: Actions Panel -->
-      <div class="card pad">
-        <div class="panelTitle">
-          <h2>Actions</h2>
-          <div class="tiny">Everything is accessible via clean buttons — like your reference image.</div>
+      <!-- RIGHT: Silicon-valley Tiles -->
+      <div class="panel tiles">
+        <div class="tilesHead">
+          <h2>Shortcuts</h2>
+          <p>Clean buttons only — no clutter.</p>
         </div>
 
-        <div class="actionList">
-          <div class="action" onclick="location.href='index.html'">
-            <div class="left">
+        <div class="tileGrid">
+          <div class="tile" onclick="location.href='index.html'">
+            <div class="l">
               <div class="t">Home</div>
-              <div class="d">Landing page</div>
+              <div class="d">Landing</div>
             </div>
-            <div class="go">→</div>
+            <div class="ico">⌂</div>
           </div>
 
-          <div class="action" onclick="window.scrollTo({top:0, behavior:'smooth'})">
-            <div class="left">
-              <div class="t">Health Score</div>
-              <div class="d">Run analysis</div>
+          <div class="tile" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+            <div class="l">
+              <div class="t">Health</div>
+              <div class="d">Score</div>
             </div>
-            <div class="go">→</div>
+            <div class="ico">◎</div>
           </div>
 
-          <div class="action" id="reports">
-            <div class="left">
+          <div class="tile" onclick="alert('Reports coming next.')">
+            <div class="l">
               <div class="t">Reports</div>
-              <div class="d">Coming next</div>
+              <div class="d">Next</div>
             </div>
-            <div class="go">→</div>
+            <div class="ico">▤</div>
           </div>
 
-          <div class="action" onclick="alert('How it works section can be on Home (v1).')">
-            <div class="left">
+          <div class="tile" onclick="alert('How it works can be on Home page.')">
+            <div class="l">
               <div class="t">How it works</div>
-              <div class="d">Simple steps</div>
+              <div class="d">Steps</div>
             </div>
-            <div class="go">→</div>
+            <div class="ico">⟡</div>
           </div>
 
-          <div class="action" onclick="alert('Pricing: Early access. Connect Stripe later.')">
-            <div class="left">
+          <div class="tile" onclick="alert('Pricing: Early access (Stripe later).')">
+            <div class="l">
               <div class="t">Pricing</div>
-              <div class="d">Early access</div>
+              <div class="d">Early</div>
             </div>
-            <div class="go">→</div>
+            <div class="ico">$</div>
           </div>
 
-          <div class="action" id="faq" onclick="alert('FAQ page later (v2).')">
-            <div class="left">
+          <div class="tile" onclick="alert('FAQ page later.')">
+            <div class="l">
               <div class="t">FAQ</div>
-              <div class="d">Quick answers</div>
+              <div class="d">Help</div>
             </div>
-            <div class="go">→</div>
+            <div class="ico">?</div>
           </div>
 
-          <div class="action" onclick="navigator.clipboard.writeText('contact@steadypilot.ai'); alert('Copied: contact@steadypilot.ai');">
-            <div class="left">
+          <div class="tile wide" onclick="navigator.clipboard.writeText('contact@steadypilot.ai'); alert('Copied: contact@steadypilot.ai');">
+            <div class="l">
               <div class="t">Contact</div>
               <div class="d">contact@steadypilot.ai</div>
             </div>
-            <div class="go">⧉</div>
+            <div class="ico">⧉</div>
           </div>
 
-          <div class="action" onclick="alert('Join Beta: connect this to your form later.')">
-            <div class="left">
+          <div class="tile wide" onclick="alert('Join Beta (connect to your form later).')">
+            <div class="l">
               <div class="t">Join Beta</div>
               <div class="d">Request early access</div>
             </div>
-            <div class="go">★</div>
+            <div class="ico">★</div>
           </div>
         </div>
 
-        <div class="footer">
+        <div class="foot">
           <div>SteadyPilot — calm AI guidance.</div>
           <div>© 2026 • Beta</div>
         </div>
@@ -609,13 +616,53 @@
     </div>
   </div>
 
+  <!-- Inputs Modal -->
+  <div class="modal" id="modal" onclick="if(event.target.id==='modal') closeInputs()">
+    <div class="sheet">
+      <div class="sheetTop">
+        <b>Edit Inputs (monthly)</b>
+        <button class="x" onclick="closeInputs()">✕</button>
+      </div>
+      <div class="sheetBody">
+        <div class="row2">
+          <div>
+            <label>Monthly Revenue ($)</label>
+            <input id="revenue" type="number" placeholder="e.g. 45000" />
+          </div>
+          <div>
+            <label>Monthly Rent ($)</label>
+            <input id="rent" type="number" placeholder="e.g. 9000" />
+          </div>
+        </div>
+
+        <div class="row2">
+          <div>
+            <label>Monthly Labor Cost ($)</label>
+            <input id="labor" type="number" placeholder="e.g. 16000" />
+          </div>
+          <div>
+            <label>Food Cost %</label>
+            <input id="food" type="number" placeholder="e.g. 31" />
+          </div>
+        </div>
+
+        <div class="sheetActions">
+          <button class="btn btnPrimary" onclick="closeInputs(); calculate();">Save & Analyze</button>
+          <button class="btn" onclick="closeInputs()">Save</button>
+        </div>
+
+        <div class="tinyHint" style="margin-top:12px;">
+          Keep values monthly. This intentionally stays simple — no clutter.
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // Keep chevron direction consistent with details open/close
-    const inputsBox = document.getElementById('inputsBox');
-    const chev = document.getElementById('chev');
-    function syncChev(){ chev.textContent = inputsBox.open ? "⌄" : "›"; }
-    inputsBox.addEventListener('toggle', syncChev);
-    syncChev();
+    const modal = document.getElementById('modal');
+
+    function openInputs(){ modal.style.display = 'flex'; }
+    function closeInputs(){ modal.style.display = 'none'; }
 
     function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
 
@@ -626,91 +673,84 @@
       return bands[bands.length - 1].pts;
     }
 
+    function setStatus(score, netMargin){
+      let status="Stable", cls="good", ring="var(--good)", watch="Watch margin", freq="Monthly (Stable)";
+      let priority="Keep costs steady. Small weekly actions protect margin without stress.";
+
+      if(score < 50){
+        status="High Risk"; cls="bad"; ring="var(--bad)";
+        watch="Cut pressure"; freq="Weekly (Pressure)";
+        priority="Stabilize cash: reduce cost pressure (labor/food) before adding new expenses.";
+      } else if(score < 75){
+        status="Moderate"; cls="warn"; ring="var(--warn)";
+        watch="Watch margin"; freq="Weekly (Needed)";
+        priority="Protect margin this month: tune portion size or pricing on highest-volume items.";
+      }
+
+      // If net margin very low, keep message conservative
+      if(netMargin < 5 && score >= 50){
+        priority="Margin is thin. Focus on one small change: portion control or a micro price adjustment.";
+      }
+
+      document.getElementById('badgeStatus').className = 'badge ' + cls;
+      document.getElementById('badgeStatus').textContent = status;
+      document.getElementById('badgeWatch').textContent = watch;
+
+      const ringEl = document.getElementById('ring');
+      ringEl.style.setProperty('--ring', ring);
+
+      document.getElementById('priorityText').textContent = priority;
+      document.getElementById('chipState').textContent = status;
+
+      document.getElementById('metaFreq').textContent = 'Adaptive: ' + freq;
+      const now = new Date();
+      document.getElementById('metaUpdated').textContent = 'Last update: ' + now.toLocaleDateString();
+    }
+
     function calculate(){
       const revenue = parseFloat(document.getElementById("revenue").value);
       const rent = parseFloat(document.getElementById("rent").value);
       const labor = parseFloat(document.getElementById("labor").value);
       const foodPct = parseFloat(document.getElementById("food").value);
 
-      if (!revenue || !rent || !labor || !foodPct){
-        alert("Please fill all fields.");
+      if(!revenue || !rent || !labor || !foodPct){
+        alert("Open Edit Inputs and fill all fields.");
         return;
       }
 
       const rentRatio = (rent / revenue) * 100;
       const laborRatio = (labor / revenue) * 100;
-
-      // Conservative net margin estimate (simple v1):
       const netMargin = 100 - (rentRatio + laborRatio + foodPct);
 
-      // Each category: 0..25 points (conservative bands)
+      // Conservative scoring (same logic, cleaner UI)
       const rentPts = pointsFromBands(rentRatio, [
         { max: 10, pts: 25 },
         { max: 18, pts: 18 },
         { max: 1000, pts: 10 }
       ]);
-
-      const laborPts = (laborRatio >= 25 && laborRatio <= 30) ? 25
-        : (laborRatio <= 35 ? 18 : 10);
-
-      const foodPts = (foodPct >= 26 && foodPct <= 30) ? 25
-        : (foodPct <= 34 ? 18 : 10);
-
-      const marginPts = (netMargin >= 12) ? 25
-        : (netMargin >= 7 ? 18 : 10);
+      const laborPts = (laborRatio >= 25 && laborRatio <= 30) ? 25 : (laborRatio <= 35 ? 18 : 10);
+      const foodPts  = (foodPct   >= 26 && foodPct   <= 30) ? 25 : (foodPct   <= 34 ? 18 : 10);
+      const marginPts= (netMargin >= 12) ? 25 : (netMargin >= 7 ? 18 : 10);
 
       const score = clamp(Math.round(rentPts + laborPts + foodPts + marginPts), 0, 100);
 
-      let status = "Stable";
-      let cls = "good";
-      let ring = "var(--good)";
-      let onePriority = "Keep your core costs stable and protect margin with small weekly adjustments.";
-      let watch = "Watch margin";
+      // UI updates
+      document.getElementById('scoreNum').textContent = score;
 
-      if (score < 50){
-        status = "High Risk";
-        cls = "bad";
-        ring = "var(--bad)";
-        onePriority = "Focus on cash stability: reduce cost pressure (labor/food) before adding new expenses.";
-        watch = "Cut pressure";
-      } else if (score < 75){
-        status = "Moderate Risk";
-        cls = "warn";
-        ring = "var(--warn)";
-        onePriority = "Protect margin this month: tune portion sizes or pricing on your highest-volume items.";
-        watch = "Watch margin";
-      }
+      const ringEl = document.getElementById('ring');
+      ringEl.style.setProperty('--p', score);
 
-      // Update ring
-      const ringEl = document.getElementById("ring");
-      ringEl.style.setProperty("--p", score);
-      ringEl.style.setProperty("--ring", ring);
+      // Results
+      document.getElementById('results').style.display = 'block';
+      document.getElementById('mStat').textContent = netMargin.toFixed(1) + "%";
 
-      // Update text
-      document.getElementById("scoreNum").textContent = score;
-      const statusBadge = document.getElementById("statusBadge");
-      statusBadge.className = "badge " + cls;
-      statusBadge.textContent = status;
-
-      document.getElementById("watchBadge").textContent = watch;
-      document.getElementById("priorityText").textContent = onePriority;
-
-      // mini stats
-      document.getElementById("mStat").textContent = netMargin.toFixed(1) + "%";
-      const pressure = (rentRatio + laborRatio + foodPct);
+      const pressure = rentRatio + laborRatio + foodPct;
       let pressureLabel = "Low";
-      if (pressure > 85) pressureLabel = "High";
-      else if (pressure > 75) pressureLabel = "Moderate";
-      document.getElementById("pStat").textContent = pressureLabel;
+      if(pressure > 85) pressureLabel = "High";
+      else if(pressure > 75) pressureLabel = "Moderate";
+      document.getElementById('pStat').textContent = pressureLabel;
 
-      // top pill
-      const pill = document.getElementById("pillStatus");
-      pill.textContent = status;
-      pill.style.borderColor = "rgba(255,255,255,.14)";
-      pill.style.background = "rgba(255,255,255,.06)";
-
-      // Optional: auto-hide inputs after analyze for clean feel
-      // inputsBox.open = false;
+      setStatus(score, netMargin);
     }
   </script>
 </body>
